@@ -78,6 +78,43 @@ result.output(:basic)
 #        "The instance value \"Human\" must be equal to one of the elements in the defined enumeration: [\"Nord\", \"Khajiit\", \"Argonian\", \"Breton\", \"Redguard\", \"Dunmer\", \"Altmer\", \"Bosmer\", \"Orc\", \"Imperial\"]"}]}
 ```
 
+### Evaluating against a reference
+
+```ruby
+require "json_skooma"
+
+# Create a registry to store schemas, vocabularies, dialects, etc.
+JSONSkooma.create_registry("2020-12", assert_formats: true)
+
+# Load a schema
+schema_hash = {
+  "$schema" => "https://json-schema.org/draft/2020-12/schema",
+  "$defs" => {
+    "Foo": {
+      "type" => "object",
+      "properties" => { 
+        "foo" => {"enum" => ["baz"]}
+      },
+    }
+  }
+}
+
+schema = JSONSkooma::JSONSchema.new(schema_hash)
+
+result = schema.evaluate({foo: "bar"}, ref: "#/$defs/Foo")
+
+result.valid? # => false
+
+result.output(:basic)
+# {"valid"=>false,
+#  "errors"=>
+#   [{"instanceLocation"=>"", "keywordLocation"=>"/properties", "absoluteKeywordLocation"=>"urn:uuid:cb8fb0a0-ce16-416f-b5ba-2a6531992be9#/$defs/Foo/properties", "error"=>"Properties [\"foo\"] are invalid"},
+#    {"instanceLocation"=>"/foo",
+#     "keywordLocation"=>"/properties/foo/enum",
+#     "absoluteKeywordLocation"=>"urn:uuid:cb8fb0a0-ce16-416f-b5ba-2a6531992be9#/$defs/Foo/properties/foo/enum",
+#     "error"=>"The instance value \"bar\" must be equal to one of the elements in the defined enumeration: [\"baz\"]"}]}
+```
+
 ## Alternatives
 
 - [json_schemer](https://github.com/davishmcclurg/json_schemer) – Draft 4, 6, 7, 2019-09 and 2020-12 compliant
