@@ -25,7 +25,9 @@ module JSONSkooma
       resolve_references if parent.nil?
     end
 
-    def evaluate(instance, result = nil)
+    def evaluate(instance, result = nil, ref: nil)
+      return resolve_ref(ref).evaluate(instance, result) if ref
+
       instance = JSONSkooma::JSONNode.new(instance) unless instance.is_a?(JSONNode)
 
       result ||= Result.new(self, instance)
@@ -49,6 +51,18 @@ module JSONSkooma
       end
 
       result
+    end
+
+    def resolve_uri(uri)
+      uri = URI.parse(uri)
+      return uri if uri.absolute?
+      return base_uri + uri if base_uri
+
+      raise Error, "No base URI against which to resolve uri `#{uri}`"
+    end
+
+    def resolve_ref(uri)
+      registry.schema(resolve_uri(uri), metaschema_uri: metaschema_uri, cache_id: cache_id)
     end
 
     def validate
