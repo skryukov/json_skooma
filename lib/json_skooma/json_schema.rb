@@ -1,0 +1,176 @@
+# frozen_string_literal: true
+
+module JSONSkooma
+  class JSONSchema < JSONNode
+    extend Memoizable
+
+    attr_reader :uri, :cache_id, :registry
+
+    attr_writer :metaschema_uri
+
+    def initialize(value, registry: Registry::DEFAULT_NAME, cache_id: "default", uri: nil, metaschema_uri: nil, parent: nil, key: nil)
+      super(value, parent: parent, key: key)
+
+      @keywords = {}
+
+      @cache_id = cache_id
+      @registry = Registry[registry]
+      self.metaschema_uri = metaschema_uri.is_a?(String) ? URI.parse(metaschema_uri) : metaschema_uri
+      self.uri = uri.is_a?(String) ? URI.parse(uri) : uri
+
+      return if type != "object"
+
+      self.uri ||= URI("urn:uuid:#{SecureRandom.uuid}") if parent.nil?
+      resolve_keywords(value.transform_keys(&:to_s))
+      resolve_references if parent.nil?
+    end
+
+    def evaluate(instance, result = nil)
+      instance = JSONSkooma::JSONNode.new(instance) unless instance.is_a?(JSONNode)
+
+      result ||= Result.new(self, instance)
+      case value
+      when true
+        # do nothing
+      when false
+        result.failure("The instance is disallowed by a boolean false schema")
+      else
+        @keywords.each do |key, keyword|
+          next if keyword.static || !keyword.instance_types.include?(instance.type)
+
+          result.call(instance, key, self) do |subresult|
+            keyword.evaluate(instance, subresult)
+          end
+        end
+
+        if result.children.any? { |_, child| !child.passed? && child.instance.path == instance.path }
+          result.failure
+        end
+      end
+
+      result
+    end
+
+    def validate
+      metaschema.evaluate(self)
+    end
+
+    def parent_schema
+      node = parent
+      while node
+        return node if node.is_a?(JSONSchema)
+
+        node = node.parent
+      end
+    end
+    memoize :parent_schema
+
+    def uri=(uri)
+      return if @uri == uri
+
+      @base_uri = nil
+      @registry.delete_schema(@uri, cache_id: @cache_id) if @uri
+      @uri = uri
+      @registry.add_schema(@uri, self, cache_id: @cache_id) if @uri
+    end
+
+    def metaschema
+      raise RegistryError, "The schema's metaschema URI has not been set" if metaschema_uri.nil?
+
+      @metaschema ||= @registry.metaschema(metaschema_uri)
+    end
+
+    def metaschema_uri
+      @metaschema_uri || parent_schema&.metaschema_uri
+    end
+    memoize :metaschema_uri
+
+    def base_uri
+      return parent_schema&.base_uri unless uri
+
+      @base_uri ||= uri.dup.tap { |u| u.fragment = nil }
+    end
+
+    def canonical_uri
+      return uri if uri
+
+      keys = []
+      node = self
+      while node.parent
+        keys.unshift(node.key)
+        node = node.parent
+
+        if node.is_a?(JSONSchema) && node.uri
+          fragment = JSONPointer.new(node.uri.fragment || "") << keys
+          return node.uri.dup.tap { |u| u.fragment = fragment.to_s }
+        end
+      end
+    end
+    memoize :canonical_uri
+
+    def resolve_references
+      @keywords.each_value { |kw| kw.resolve }
+    end
+
+    private
+
+    def resolve_keywords(value)
+      bootstrap(value)
+
+      kw_classes = value.keys
+        .reject { |k| @keywords.key?(k) }
+        .map { |k| [k, kw_class(k)] }
+        .to_h
+
+      dependencies_in_order(kw_classes) do |kw_class|
+        add_keyword(kw_class.new(self, value[kw_class.key]))
+      end
+    end
+
+    def bootstrap(value)
+      bootstrap_kw_classes = {
+        "$schema" => Keywords::Core::Schema,
+        "$id" => Keywords::Core::Id
+      }
+
+      bootstrap_kw_classes.each do |key, kw_class|
+        next unless value.key?(key)
+
+        add_keyword(kw_class.new(self, value[key]))
+      end
+    end
+
+    def kw_class(k)
+      metaschema.kw_class(k)
+    end
+
+    def add_keyword(kw)
+      @keywords[kw.key] = kw
+      __getobj__[kw.key] = kw.json
+    end
+
+    def dependencies_in_order(kw_classes)
+      dependencies = kw_classes.map do |_, kw_class|
+        [kw_class, kw_class.depends_on.map { |dep| kw_classes[dep] }.compact]
+      end.to_h
+
+      while dependencies.any?
+        kw_class, _ = dependencies.find { |_, depclasses| depclasses.empty? }
+        dependencies.delete(kw_class)
+        dependencies.each { |_, deps| deps.delete(kw_class) }
+        yield kw_class
+      end
+    end
+
+    def parse_value(value, **options)
+      case value
+      when true, false
+        ["boolean", value]
+      when Hash
+        ["object", {}]
+      else
+        raise TypeError, "#{value} is not JSONSchema-compatible"
+      end
+    end
+  end
+end

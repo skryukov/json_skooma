@@ -1,0 +1,11 @@
+[submodule "spec/json_schema_test_suite"]
+	path = spec/json_schema_test_suite
+	url = https://github.com/json-schema-org/JSON-Schema-Test-Suite
+[submodule "data/draft-2020-12"]
+	path = data/draft-2020-12
+	url = https://github.com/json-schema-org/json-schema-spec
+	branch = 2020-12
+[submodule "draft-2019-09"]
+	path = data/draft-2019-09
+	url = https://github.com/json-schema-org/json-schema-spec
+	branch = 2019-09
