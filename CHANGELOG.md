@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix compatibility issues for Ruby < 3.1 and JRuby. ([@skryukov])
+
 ## [0.1.0] - 2023-09-27
 
 ### Added
