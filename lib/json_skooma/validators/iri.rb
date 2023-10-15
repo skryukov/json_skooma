@@ -23,7 +23,7 @@ module JSONSkooma
       IPATH_OLD = /#{IPATH_ABEMPTY}|#{IPATH_ABSOLUTE}|#{IPATH_NOSCHEME}|#{IPATH_ROOTLESS}|/.freeze
 
       IREG_NAME = /(?:#{IUNRESERVED}|#{Uri::PCT_ENCODED}|#{Uri::SUB_DELIMS})*/.freeze
-      IHOST = /#{Uri::IP_LITERAL}|#{Uri::IPV4_ADDRESS}|#{IREG_NAME}/.freeze
+      IHOST = /#{Uri::IP_LITERAL}|#{Ipv4::IPV4_ADDRESS}|#{IREG_NAME}/.freeze
       IUSERINFO = /(?:#{IUNRESERVED}|#{Uri::PCT_ENCODED}|#{Uri::SUB_DELIMS}|:)*/.freeze
       IAUTHORITY = /(?:#{IUSERINFO}@)?#{IHOST}(?::#{Uri::PORT})?/.freeze
 
