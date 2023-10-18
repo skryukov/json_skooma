@@ -21,7 +21,7 @@ module JSONSkooma
     def bootstrap(value)
       super
 
-      kw = Keywords::Core::Vocabulary.new(self, value.fetch("$vocabulary", default_vocabulary_urls))
+      kw = Keywords::Core::Vocabulary.new(self, value.fetch("$vocabulary") { default_vocabulary_urls })
       add_keyword(kw) if value.key?("$vocabulary")
     end
 

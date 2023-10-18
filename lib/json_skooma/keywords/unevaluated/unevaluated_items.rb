@@ -30,7 +30,7 @@ module JSONSkooma
           end
 
           contains_indices = Set.new
-          result.parent.collect_annotations(instance, "contains") { |i| contains_indices += Set.new(i) }
+          result.parent.collect_annotations(instance, "contains") { |i| contains_indices += i }
           annotation = nil
           error = []
 

@@ -26,7 +26,7 @@ module JSONSkooma
 
           return result.annotate(annotation) if err_names.empty?
 
-          result.failure("Properties #{err_names} are invalid")
+          result.failure("Properties #{err_names.join(", ")} are invalid")
         end
       end
     end

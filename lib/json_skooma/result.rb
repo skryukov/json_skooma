@@ -4,28 +4,37 @@ module JSONSkooma
   class Result
     attr_writer :ref_schema
 
-    attr_reader :children, :path, :relative_path, :schema, :instance, :parent, :annotation, :error, :key, :root
+    attr_reader :schema, :instance, :parent, :annotation, :error, :key
 
     def initialize(schema, instance, parent: nil, key: nil)
       @schema = schema
       @instance = instance
       @parent = parent
-      @root = parent&.root || self
       @key = key
-      @children = {}
       @valid = true
-      if parent.nil?
-        @path = JSONPointer.new([])
-        @relative_path = JSONPointer.new([])
-      else
-        @path = parent.path.child(key)
-        @relative_path =
-          if schema.equal?(parent.schema)
-            parent.relative_path.child(key)
-          else
-            JSONPointer.new_root(key)
-          end
-      end
+    end
+
+    def children
+      @children ||= {}
+    end
+
+    def path
+      @path ||= @parent.nil? ? JSONPointer.new([]) : parent.path.child(key)
+    end
+
+    def relative_path
+      @relative_path ||=
+        if @parent.nil?
+          JSONPointer.new([])
+        elsif schema.equal?(parent.schema)
+          parent.relative_path.child(key)
+        else
+          JSONPointer.new_root(key)
+        end
+    end
+
+    def root
+      @root ||= parent&.root || self
     end
 
     def call(instance, key, schema = nil, subclass: self.class)
@@ -33,7 +42,7 @@ module JSONSkooma
 
       yield child
 
-      @children[[key, instance.path]] = child unless child.discard?
+      children[[key, instance.path]] = child unless child.discard?
     end
 
     def schema_node
@@ -95,31 +104,19 @@ module JSONSkooma
         yield @annotation
       end
 
-      @children.each do |_, child|
+      children.each do |_, child|
         child.collect_annotations(instance, key) do |annotation|
           yield annotation
         end
       end
     end
 
-    def collect_errors(instance: nil, key: nil)
-      return if valid? || discard?
-
-      if @error &&
-          (key.nil? || key == @key) &&
-          (instance.nil? || instance.path == @instance.path)
-        yield @error
-      end
-
-      @children.each do |_, child|
-        child.collect_errors(instance, key) do |error|
-          yield error
-        end
-      end
-    end
-
     def output(format, **options)
       Formatters[format].call(self, **options)
+    end
+
+    def to_s
+      output(:simple)
     end
   end
 end

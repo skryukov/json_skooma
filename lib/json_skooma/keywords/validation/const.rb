@@ -9,7 +9,7 @@ module JSONSkooma
         def evaluate(instance, result)
           return if instance == json
 
-          result.failure("The instance value #{instance.value.inspect} must be equal to the defined constant #{json.value.inspect}")
+          result.failure("The instance value #{instance.value} must be equal to the defined constant #{json.value}")
         end
       end
     end

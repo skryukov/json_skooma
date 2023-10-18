@@ -17,7 +17,7 @@ module JSONSkooma
           end
           return if err_indices.empty?
 
-          result.failure("The instance is invalid against subschemas #{err_indices}")
+          result.failure("The instance is invalid against subschemas #{err_indices.join(", ")}")
         end
       end
     end

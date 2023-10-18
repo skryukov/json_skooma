@@ -22,7 +22,7 @@ module JSONSkooma
             annotation = nil
             error = []
 
-            instance.take(json.length).each_with_index do |item, index|
+            instance.take(json.value.length).each_with_index do |item, index|
               annotation = index
               result.call(item, index.to_s) do |subresult|
                 unless json[index].evaluate(item, subresult).passed?

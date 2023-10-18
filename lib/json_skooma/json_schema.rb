@@ -123,7 +123,7 @@ module JSONSkooma
     memoize :canonical_uri
 
     def resolve_references
-      @keywords.each_value { |kw| kw.resolve }
+      @keywords.each_value(&:resolve)
     end
 
     private
@@ -164,19 +164,19 @@ module JSONSkooma
     end
 
     def dependencies_in_order(kw_classes)
-      dependencies = kw_classes.map do |_, kw_class|
-        [kw_class, kw_class.depends_on.map { |dep| kw_classes[dep] }.compact]
-      end.to_h
+      dependencies = kw_classes.each_value.with_object({}) do |kw_class, res|
+        res[kw_class] = kw_class.depends_on.filter_map { |dep| kw_classes[dep] }
+      end
 
       while dependencies.any?
         kw_class, _ = dependencies.find { |_, depclasses| depclasses.empty? }
         dependencies.delete(kw_class)
-        dependencies.each { |_, deps| deps.delete(kw_class) }
+        dependencies.each_value { |deps| deps.delete(kw_class) }
         yield kw_class
       end
     end
 
-    def parse_value(value, **options)
+    def parse_value(value)
       case value
       when true, false
         ["boolean", value]
