@@ -10,7 +10,7 @@ module JSONSkooma
 
         def evaluate(instance, result)
           error = []
-          instance.each do |name,|
+          instance.each_key do |name|
             next if json.evaluate(JSONNode.new(name, key: name, parent: instance), result).passed?
 
             error << name

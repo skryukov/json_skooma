@@ -35,7 +35,7 @@ module JSONSkooma
           end
 
           if err_names.any?
-            result.failure("Properties #{err_names} are invalid")
+            result.failure("Properties #{err_names.join(", ")} are invalid")
           else
             result.annotate(matched_names.to_a)
           end

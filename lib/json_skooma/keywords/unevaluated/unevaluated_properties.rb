@@ -14,10 +14,10 @@ module JSONSkooma
 
         def evaluate(instance, result)
           evaluated_names = Set.new
-          result.parent.collect_annotations(instance, "properties") { |name| evaluated_names += Set.new(name) }
-          result.parent.collect_annotations(instance, "patternProperties") { |name| evaluated_names += Set.new(name) }
-          result.parent.collect_annotations(instance, "additionalProperties") { |name| evaluated_names += Set.new(name) }
-          result.parent.collect_annotations(instance, "unevaluatedProperties") { |name| evaluated_names += Set.new(name) }
+          result.parent.collect_annotations(instance, "properties") { |name| evaluated_names += name }
+          result.parent.collect_annotations(instance, "patternProperties") { |name| evaluated_names += name }
+          result.parent.collect_annotations(instance, "additionalProperties") { |name| evaluated_names += name }
+          result.parent.collect_annotations(instance, "unevaluatedProperties") { |name| evaluated_names += name }
 
           annotation = []
           error = []

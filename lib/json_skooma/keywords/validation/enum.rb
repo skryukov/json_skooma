@@ -10,7 +10,7 @@ module JSONSkooma
           return if json.include?(instance)
 
           result.failure(
-            "The instance value #{instance.value.inspect} must be equal to one of the elements in the defined enumeration: #{json.value}"
+            "The instance value #{instance.value} must be equal to one of the elements in the defined enumeration: #{json.value.join(", ")}"
           )
         end
       end

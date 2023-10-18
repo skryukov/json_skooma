@@ -6,17 +6,20 @@ module JSONSkooma
   class JSONNode < SimpleDelegator
     extend Memoizable
 
-    attr_reader :parent, :root, :key, :type
+    attr_reader :parent, :key, :type
 
     def initialize(value, key: nil, parent: nil, item_class: JSONNode, **item_params)
       @key = key
       @parent = parent
-      @root = parent&.root || self
       @item_class = item_class
       @item_params = item_params
       @type, data = parse_value(value)
 
       super(data)
+    end
+
+    def root
+      @root ||= parent&.root || self
     end
 
     def [](key)
@@ -43,9 +46,11 @@ module JSONSkooma
     memoize :value
 
     def path
-      result = []
-      each_parent { |node| result.unshift(node.key) }
-      JSONPointer.new(result)
+      if @parent.nil?
+        JSONPointer.new([])
+      else
+        @parent.path.child(@key)
+      end
     end
     memoize :path
 
@@ -94,7 +99,9 @@ module JSONSkooma
     end
 
     def map_object_value(value)
-      value.map { |k, v| [k.to_s, @item_class.new(v, key: k.to_s, parent: self, **@item_params)] }.to_h
+      value.each_with_object({}) do |(k, v), h|
+        h[k.to_s] = @item_class.new(v, key: k.to_s, parent: self, **@item_params)
+      end
     end
   end
 end
