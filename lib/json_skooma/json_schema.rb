@@ -2,10 +2,7 @@
 
 module JSONSkooma
   class JSONSchema < JSONNode
-    extend Memoizable
-
     attr_reader :uri, :cache_id, :registry
-
     attr_writer :metaschema_uri
 
     def initialize(value, registry: Registry::DEFAULT_NAME, cache_id: "default", uri: nil, metaschema_uri: nil, parent: nil, key: nil)
@@ -70,14 +67,15 @@ module JSONSkooma
     end
 
     def parent_schema
+      return @parent_schema if instance_variable_defined?(:@parent_schema)
+
       node = parent
       while node
-        return node if node.is_a?(JSONSchema)
+        return @parent_schema = node if node.is_a?(JSONSchema)
 
         node = node.parent
       end
     end
-    memoize :parent_schema
 
     def uri=(uri)
       return if @uri == uri
@@ -95,9 +93,8 @@ module JSONSkooma
     end
 
     def metaschema_uri
-      @metaschema_uri || parent_schema&.metaschema_uri
+      @metaschema_uri ||= parent_schema&.metaschema_uri
     end
-    memoize :metaschema_uri
 
     def base_uri
       return parent_schema&.base_uri unless uri
@@ -107,6 +104,7 @@ module JSONSkooma
 
     def canonical_uri
       return uri if uri
+      return @canonical_uri if instance_variable_defined?(:@canonical_uri)
 
       keys = []
       node = self
@@ -116,11 +114,10 @@ module JSONSkooma
 
         if node.is_a?(JSONSchema) && node.uri
           fragment = JSONPointer.new(node.uri.fragment || "") << keys
-          return node.uri.dup.tap { |u| u.fragment = fragment.to_s }
+          return @canonical_uri = node.uri.dup.tap { |u| u.fragment = fragment.to_s }
         end
       end
     end
-    memoize :canonical_uri
 
     def resolve_references
       @keywords.each_value(&:resolve)

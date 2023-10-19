@@ -5,7 +5,6 @@ require "cgi"
 
 module JSONSkooma
   class JSONPointer < Hana::Pointer
-    extend Memoizable
     ESC_REGEX = /[\/^~]/.freeze
     ESC2 = {"^" => "^^", "~" => "~0", "/" => "~1"}.freeze
     ESCAPE_REGEX = /([^ a-zA-Z0-9_.\-~\/!$&'()*+,;=]+)/.freeze
@@ -47,13 +46,18 @@ module JSONSkooma
     end
 
     def to_s
-      return "" if @path == []
-      return "/" if @path == [""]
+      return @to_s if instance_variable_defined?(:@to_s)
 
-      "/" + @path.map(&method(:escape)).join("/")
+      @to_s =
+        case @path
+        when []
+          ""
+        when [""]
+          "/"
+        else
+          "/" + @path.map(&method(:escape)).join("/")
+        end
     end
-
-    memoize :to_s
 
     def ==(other)
       return super unless other.is_a?(self.class)

@@ -4,8 +4,6 @@ require "delegate"
 
 module JSONSkooma
   class JSONNode < SimpleDelegator
-    extend Memoizable
-
     attr_reader :parent, :key, :type
 
     def initialize(value, key: nil, parent: nil, item_class: JSONNode, **item_params)
@@ -34,25 +32,24 @@ module JSONSkooma
     end
 
     def value
-      case type
-      when "array"
-        map(&:value)
-      when "object"
-        transform_values(&:value)
-      else
-        __getobj__
-      end
+      return @value if instance_variable_defined?(:@value)
+
+      @value =
+        case type
+        when "array"
+          map(&:value)
+        when "object"
+          transform_values(&:value)
+        else
+          __getobj__
+        end
     end
-    memoize :value
 
     def path
-      if @parent.nil?
-        JSONPointer.new([])
-      else
-        @parent.path.child(@key)
-      end
+      return @path if instance_variable_defined?(:@path)
+
+      @path = @parent.nil? ? JSONPointer.new([]) : @parent.path.child(@key)
     end
-    memoize :path
 
     def ==(other)
       return super(other.__getobj__) if other.is_a?(self.class)
