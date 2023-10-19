@@ -12,25 +12,21 @@ module JSONSkooma
           if then else allOf anyOf oneOf not
         ]
 
+        LOOKUP_KEYWORDS = %w[items unevaluatedItems prefixItems contains].freeze
+
         def evaluate(instance, result)
+          contains_indices = Set.new
           last_evaluated_item = -1
 
-          result.parent.collect_annotations(instance, "prefixItems") do |i|
+          result.parent.collect_annotations(instance, keys: LOOKUP_KEYWORDS) do |node|
+            next contains_indices += node.annotation if node.key == "contains"
+
+            i = node.annotation
             next result.discard if i == true
 
-            last_evaluated_item = i if i > last_evaluated_item
+            last_evaluated_item = i if node.key == "prefixItems" && i > last_evaluated_item
           end
 
-          result.parent.collect_annotations(instance, "items") do |i|
-            next result.discard if i == true
-          end
-
-          result.parent.collect_annotations(instance, "unevaluatedItems") do |i|
-            next result.discard if i == true
-          end
-
-          contains_indices = Set.new
-          result.parent.collect_annotations(instance, "contains") { |i| contains_indices += i }
           annotation = nil
           error = []
 

@@ -118,18 +118,36 @@ module JSONSkooma
       schema.canonical_uri.dup.tap { |u| u.fragment = path.to_s }
     end
 
-    def collect_annotations(instance = nil, key = nil)
+    def collect_annotations(instance, key: nil, keys: nil)
       return if !valid? || discard?
 
       if @annotation &&
           (key.nil? || key == @key) &&
-          (instance.nil? || instance.path == @instance.path)
-        yield @annotation
+          (keys.nil? || keys.include?(@key)) &&
+          (instance.path == @instance.path)
+        yield self
       end
 
       children[instance.path]&.each_value do |child|
-        child.collect_annotations(instance, key) do |annotation|
-          yield annotation
+        child.collect_annotations(instance, key: key, keys: keys) do |node|
+          yield node
+        end
+      end
+    end
+
+    def collect_errors(instance, key: nil, keys: nil)
+      return if valid? || discard?
+
+      if @error &&
+          (key.nil? || key == @key) &&
+          (keys.nil? || keys.include?(@key)) &&
+          (instance.path == @instance.path)
+        yield self
+      end
+
+      children[instance.path]&.each_value do |child|
+        child.collect_errors(instance, key: key, keys: keys) do |node|
+          yield node
         end
       end
     end
