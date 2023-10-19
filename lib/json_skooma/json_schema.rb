@@ -42,7 +42,7 @@ module JSONSkooma
           end
         end
 
-        if result.children.any? { |_, child| !child.passed? && child.instance.path == instance.path }
+        if result.children[instance.path]&.any? { |_, child| !child.passed? }
           result.failure
         end
       end

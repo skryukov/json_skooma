@@ -43,7 +43,7 @@ module JSONSkooma
           key = valid ? "annotation" : "error"
           result << node_data(node, key) if node.public_send(key)
 
-          node.children.each do |_, child|
+          node.children.each_children do |child|
             collect_nodes(child, valid, result)
           end
 
@@ -83,8 +83,9 @@ module JSONSkooma
           child_key = valid ? "annotations" : "errors"
           msg_key = valid ? "annotation" : "error"
 
-          child_data = node.children.filter_map do |_, child|
-            node_data(child, valid) if child.valid? == valid
+          child_data = []
+          node.each_children do |child|
+            child_data << node_data(child, valid) if child.valid? == valid
           end
 
           if first || child_data.length > 1
@@ -121,8 +122,9 @@ module JSONSkooma
           data[msg_key] = node.public_send(msg_key) if node.public_send(msg_key)
 
           child_key = valid ? "annotations" : "errors"
-          child_data = node.children.map do |_, child|
-            node_data(child)
+          child_data = []
+          node.each_children do |child|
+            child_data << node_data(child)
           end
           data[child_key] = child_data if child_data.length > 0
 
