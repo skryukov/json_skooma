@@ -14,6 +14,14 @@ module JSONSkooma
       @children ||= {}
     end
 
+    def each_children
+      children.each_value do |child|
+        child.each_value do |grandchild|
+          yield grandchild
+        end
+      end
+    end
+
     def path
       @path ||= @parent.nil? ? JSONPointer.new([]) : parent.path.child(key)
     end
@@ -56,7 +64,8 @@ module JSONSkooma
 
       yield child
 
-      children[[key, instance.path]] = child unless child.discard?
+      return if child.discard?
+      (children[instance.path] ||= {})[key] = child
     end
 
     def schema_node
@@ -64,7 +73,7 @@ module JSONSkooma
     end
 
     def sibling(instance, key)
-      @parent.children[[key, instance.path]] if @parent
+      @parent&.children&.dig(instance.path, key)
     end
 
     def annotate(value)
@@ -118,7 +127,7 @@ module JSONSkooma
         yield @annotation
       end
 
-      children.each do |_, child|
+      children[instance.path]&.each_value do |child|
         child.collect_annotations(instance, key) do |annotation|
           yield annotation
         end
