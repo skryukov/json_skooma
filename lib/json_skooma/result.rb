@@ -7,11 +7,7 @@ module JSONSkooma
     attr_reader :schema, :instance, :parent, :annotation, :error, :key
 
     def initialize(schema, instance, parent: nil, key: nil)
-      @schema = schema
-      @instance = instance
-      @parent = parent
-      @key = key
-      @valid = true
+      reset_with(instance, key, parent, schema)
     end
 
     def children
@@ -37,8 +33,26 @@ module JSONSkooma
       @root ||= parent&.root || self
     end
 
-    def call(instance, key, schema = nil, subclass: self.class)
-      child = subclass.new(schema || @schema, instance, parent: self, key: key)
+    def reset_with(instance, key, parent, schema = nil)
+      @schema = schema if schema
+      @parent = parent
+      @key = key
+      @valid = true
+      @instance = instance
+
+      @children = nil
+      @annotation = nil
+      @discard = false
+      @skip_assertion = false
+      @error = nil
+      @path = nil
+      @ref_schema = nil
+      @relative_path = nil
+    end
+
+    def call(instance, key, schema = nil)
+      child = dup
+      child.reset_with(instance, key, self, schema)
 
       yield child
 
