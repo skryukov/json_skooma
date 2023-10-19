@@ -12,12 +12,13 @@ module JSONSkooma
           if then else dependentSchemas allOf anyOf oneOf not
         ]
 
+        LOOKUP_KEYWORDS = %w[properties patternProperties additionalProperties unevaluatedProperties].freeze
+
         def evaluate(instance, result)
           evaluated_names = Set.new
-          result.parent.collect_annotations(instance, "properties") { |name| evaluated_names += name }
-          result.parent.collect_annotations(instance, "patternProperties") { |name| evaluated_names += name }
-          result.parent.collect_annotations(instance, "additionalProperties") { |name| evaluated_names += name }
-          result.parent.collect_annotations(instance, "unevaluatedProperties") { |name| evaluated_names += name }
+          result.parent.collect_annotations(instance, keys: LOOKUP_KEYWORDS) do |node|
+            evaluated_names += node.annotation
+          end
 
           annotation = []
           error = []

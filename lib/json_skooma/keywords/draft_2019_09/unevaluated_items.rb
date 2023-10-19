@@ -12,21 +12,16 @@ module JSONSkooma
           if then else allOf anyOf oneOf not
         ]
 
+        LOOKUP_KEYWORDS = %w[items additionalItems unevaluatedItems].freeze
+
         def evaluate(instance, result)
           last_evaluated_item = -1
 
-          result.parent.collect_annotations(instance, "items") do |i|
+          result.parent.collect_annotations(instance, keys: LOOKUP_KEYWORDS) do |node|
+            i = node.annotation
             next result.discard if i == true
 
-            last_evaluated_item = i if i > last_evaluated_item
-          end
-
-          result.parent.collect_annotations(instance, "additionalItems") do |i|
-            next result.discard if i == true
-          end
-
-          result.parent.collect_annotations(instance, "unevaluatedItems") do |i|
-            next result.discard if i == true
+            last_evaluated_item = i if node.key == "items" && i > last_evaluated_item
           end
 
           annotation = nil
