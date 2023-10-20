@@ -3,6 +3,8 @@
 [![Gem Version](https://badge.fury.io/rb/json_skooma.svg)](https://rubygems.org/gems/json_skooma)
 [![Ruby](https://github.com/skryukov/json_skooma/actions/workflows/main.yml/badge.svg)](https://github.com/skryukov/json_skooma/actions/workflows/main.yml)
 
+<img style="float: right" height="150" width="150" title="Skooma logo" src="./assets/logo.svg">
+
 JSONSkooma is a Ruby library for validating JSONs against JSON Schemas.
 
 ### Features

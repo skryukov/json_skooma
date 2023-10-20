@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name = "json_skooma"
   spec.version = JSONSkooma::VERSION
   spec.authors = ["Svyatoslav Kryukov"]
-  spec.email = ["s.g.kryukov@yandex.ru"]
+  spec.email = ["me@skryukov.dev"]
 
   spec.summary = "I bring some sugar for your JSONs."
   spec.description = "I bring some sugar for your JSONs."
