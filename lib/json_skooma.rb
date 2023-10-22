@@ -6,7 +6,7 @@ require "zeitwerk"
 require_relative "json_skooma/inflector"
 
 loader = Zeitwerk::Loader.for_gem
-loader.inflector = JSONSkooma::Inflector.new
+loader.inflector = JSONSkooma::Inflector.new(__FILE__)
 loader.setup
 
 module JSONSkooma
