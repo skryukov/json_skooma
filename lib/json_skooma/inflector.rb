@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module JSONSkooma
-  class Inflector < Zeitwerk::Inflector
+  class Inflector < Zeitwerk::GemInflector
     def camelize(basename, _abspath)
       if basename.include?("json_")
         super.gsub("Json", "JSON")
