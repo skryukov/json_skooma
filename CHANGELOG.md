@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning].
 
 - Add JSON Schema evaluation against a reference. ([@skryukov])
 
+### Changed
+
+- Optimized JSON Schema evaluation. ([@skryukov])
+
 ### Fixed
 
 - Fix compatibility issues for Ruby < 3.1 and JRuby. ([@skryukov])
