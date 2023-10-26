@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Fixed
+
+- Make `unevaluated*` keyword respect reference keywords. ([@skryukov])
+
 ## [0.2.0] - 2023-10-23
 
 ### Added

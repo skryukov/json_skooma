@@ -10,6 +10,7 @@ module JSONSkooma
         self.depends_on = %w[
           properties patternProperties additionalProperties
           if then else dependentSchemas allOf anyOf oneOf not
+          $ref $dynamicRef
         ]
 
         LOOKUP_KEYWORDS = %w[properties patternProperties additionalProperties unevaluatedProperties].freeze
