@@ -10,6 +10,7 @@ module JSONSkooma
         self.depends_on = %w[
           items additionalItems
           if then else allOf anyOf oneOf not
+          $ref $dynamicRef
         ]
 
         LOOKUP_KEYWORDS = %w[items additionalItems unevaluatedItems].freeze
