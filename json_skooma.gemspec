@@ -29,5 +29,5 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency "zeitwerk", "~> 2.6"
   spec.add_runtime_dependency "hana", "~> 1.3"
   spec.add_runtime_dependency "regexp_parser", "~> 2.0"
-  spec.add_runtime_dependency "uri-idna", "~> 0.1"
+  spec.add_runtime_dependency "uri-idna", "~> 0.2"
 end
