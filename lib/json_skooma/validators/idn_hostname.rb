@@ -6,7 +6,8 @@ module JSONSkooma
   module Validators
     class IdnHostname < Base
       def call(data)
-        URI::IDNA.register(ulabel: data.value)
+        register_opts = data.value.ascii_only? ? {alabel: data.value} : {ulabel: data.value}
+        URI::IDNA.register(**register_opts)
       rescue URI::IDNA::Error => e
         raise FormatError, "#{data} is not a valid IDN hostname: #{e.message}"
       end
