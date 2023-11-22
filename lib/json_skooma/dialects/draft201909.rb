@@ -36,11 +36,11 @@ module JSONSkooma
             Keywords::Draft201909::Items,
             Keywords::Draft201909::AdditionalItems,
             Keywords::Draft201909::UnevaluatedItems,
+            Keywords::Draft201909::UnevaluatedProperties,
             Keywords::Applicator::Contains,
             Keywords::Applicator::Properties,
             Keywords::Applicator::PatternProperties,
             Keywords::Applicator::AdditionalProperties,
-            Keywords::Unevaluated::UnevaluatedProperties,
             Keywords::Applicator::PropertyNames
           )
 
