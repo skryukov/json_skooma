@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.2.1] - 2023-12-03
+
 ### Fixed
 
 - Make `unevaluated*` keyword respect reference keywords. ([@skryukov])
@@ -35,7 +37,8 @@ and this project adheres to [Semantic Versioning].
 
 [@skryukov]: https://github.com/skryukov
 
-[Unreleased]: https://github.com/skryukov/json_skooma/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/skryukov/json_skooma/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/skryukov/json_skooma/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/skryukov/json_skooma/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/skryukov/json_skooma/commits/v0.1.0
 
