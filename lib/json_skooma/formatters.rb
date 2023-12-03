@@ -43,7 +43,7 @@ module JSONSkooma
           key = valid ? "annotation" : "error"
           result << node_data(node, key) if node.public_send(key)
 
-          node.children.each_children do |child|
+          node.each_children do |child|
             collect_nodes(child, valid, result)
           end
 
