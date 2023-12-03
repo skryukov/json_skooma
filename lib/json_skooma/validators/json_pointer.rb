@@ -5,10 +5,10 @@ module JSONSkooma
     class JSONPointer < Base
       self.key = "json-pointer"
 
-      esc = /~[01]/
-      unesc = /[\u0000-\u002E\u0030-\u007d\u007F-\u{10FFFF}]/
-      token = /(#{esc}|#{unesc})*/
-      JSON_POINTER = /(\/#{token})*/
+      esc = "~[01]"
+      unesc = "[\\u0000-\\u002E\\u0030-\\u007d\\u007F-\\u{10FFFF}]"
+      token = "(?:#{esc}|#{unesc})*"
+      JSON_POINTER = "(?:\\/#{token})*"
       REGEXP = /\A#{JSON_POINTER}\z/
 
       def call

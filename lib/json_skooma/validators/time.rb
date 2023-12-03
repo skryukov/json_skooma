@@ -5,7 +5,11 @@ module JSONSkooma
     class Time < Base
       self.key = "time"
 
-      REGEXP = /\A#{DateTime::FULL_TIME}\z/
+      partial_time = "(?<h>[01]\\d|2[0-3]):(?<m>[0-5]\\d):(?<s>[0-5]\\d|60)(?<f>\\.\\d+)?"
+      time_offset = "(?:[Zz]|(?<on>[+-])(?<oh>[01]\\d|2[0-3]):(?<om>[0-5]\\d))"
+      TIME_REGEXP_STRING = "#{partial_time}#{time_offset}"
+
+      REGEXP = /\A#{TIME_REGEXP_STRING}\z/
 
       def call
         match = REGEXP.match(instance)

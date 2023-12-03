@@ -5,40 +5,40 @@ module JSONSkooma
     class Uri < Base
       self.key = "uri"
 
-      SUB_DELIMS = /[!$&'()*+,;=]/.freeze
-      UNRESERVED = /[A-Za-z\d\-._~]/.freeze
-      PCT_ENCODED = /%\h{2}/.freeze
-      pchar = /(?:#{UNRESERVED}|#{PCT_ENCODED}|#{SUB_DELIMS}|[:@])/.freeze
-      fragment = /(?:#{pchar}|[?\/])*/.freeze
+      SUB_DELIMS = "[!$&'()*+,;=]"
+      UNRESERVED = "[A-Za-z\\d\\-._~]"
+      PCT_ENCODED = "%\\h{2}"
+      pchar = "(?:#{UNRESERVED}|#{PCT_ENCODED}|#{SUB_DELIMS}|[:@])"
+      fragment = "(?:#{pchar}|[?\\/])*"
       query = fragment
 
-      segment = /#{pchar}*/.freeze
-      segment_nz = /#{pchar}+/.freeze
-      segment_nz_nc = /(?:#{UNRESERVED}|#{PCT_ENCODED}|#{SUB_DELIMS}|@)+/.freeze
+      segment = "#{pchar}*"
+      segment_nz = "#{pchar}+"
+      segment_nz_nc = "(?:#{UNRESERVED}|#{PCT_ENCODED}|#{SUB_DELIMS}|@)+"
 
-      path_abempty = /(?:\/#{segment})*/.freeze
-      path_absolute = /\/(?:#{segment_nz}(?:\/#{segment})*)?/.freeze
-      path_noscheme = /#{segment_nz_nc}(?:\/#{segment})*/.freeze
-      path_rootless = /#{segment_nz}(?:\/#{segment})*/.freeze
+      path_abempty = "(?:\\/#{segment})*"
+      path_absolute = "\\/(?:#{segment_nz}(?:/#{segment})*)?"
+      path_noscheme = "#{segment_nz_nc}(?:\\/#{segment})*"
+      path_rootless = "#{segment_nz}(?:\\/#{segment})*"
 
-      ipv_future = /v\h+\.(?:#{UNRESERVED}|#{SUB_DELIMS}|:)+/.freeze
-      IP_LITERAL = /\[(?:#{Ipv6::IPV6_ADDRESS}|#{ipv_future})\]/.freeze
+      ipv_future = "v\\h+\\.(?:#{UNRESERVED}|#{SUB_DELIMS}|:)+"
+      IP_LITERAL = "\\[(?:#{Ipv6::IPV6_ADDRESS}|#{ipv_future})\\]"
 
-      PORT = /\d*/.freeze
-      reg_name = /(?:#{UNRESERVED}|#{PCT_ENCODED}|#{SUB_DELIMS})*/.freeze
-      host = /(?:#{IP_LITERAL}|#{Ipv4::IPV4_ADDRESS}|#{reg_name})/.freeze
-      userinfo = /(?:#{UNRESERVED}|#{PCT_ENCODED}|#{SUB_DELIMS}|:)*/.freeze
-      authority = /(?:#{userinfo}@)?#{host}(?::#{PORT})?/.freeze
+      PORT = "\\d*"
+      reg_name = "(?:#{UNRESERVED}|#{PCT_ENCODED}|#{SUB_DELIMS})*"
+      host = "(?:#{IP_LITERAL}|#{Ipv4::IPV4_ADDRESS}|#{reg_name})"
+      userinfo = "(?:#{UNRESERVED}|#{PCT_ENCODED}|#{SUB_DELIMS}|:)*"
+      authority = "(?:#{userinfo}@)?#{host}(?::#{PORT})?"
 
-      SCHEME = /[a-zA-Z][a-zA-Z\d+.-]*/.freeze
+      SCHEME = "[a-zA-Z][a-zA-Z\\d+.-]*"
 
-      hier_part = /(?:(?:\/\/#{authority}#{path_abempty})|#{path_absolute}|#{path_rootless})?/.freeze
+      hier_part = "(?:(?:\\/\\/#{authority}#{path_abempty})|#{path_absolute}|#{path_rootless})?"
 
-      URI = /#{SCHEME}:#{hier_part}(?:\?#{query})?(?:##{fragment})?/.freeze
+      URI = "#{SCHEME}:#{hier_part}(?:\\?#{query})?(?:##{fragment})?"
 
-      relative_part = /(?:(?:\/\/#{authority}#{path_abempty})|#{path_absolute}|#{path_noscheme})?/.freeze
-      relative_ref = /#{relative_part}(?:\?#{query})?(?:##{fragment})?/.freeze
-      URI_REFERENCE = /#{URI}|#{relative_ref}/.freeze
+      relative_part = "(?:(?:\\/\\/#{authority}#{path_abempty})|#{path_absolute}|#{path_noscheme})?"
+      relative_ref = "#{relative_part}(?:\\?#{query})?(?:##{fragment})?"
+      URI_REFERENCE = "(?:#{URI}|#{relative_ref})"
 
       REGEXP = /\A#{URI}\z/.freeze
 
