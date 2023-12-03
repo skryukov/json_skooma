@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning].
 ### Fixed
 
 - Make `unevaluated*` keyword respect reference keywords. ([@skryukov])
+- Fix `:basic` output. ([@skryukov])
 
 ## [0.2.0] - 2023-10-23
 
