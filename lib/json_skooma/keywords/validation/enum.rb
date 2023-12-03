@@ -9,9 +9,7 @@ module JSONSkooma
         def evaluate(instance, result)
           return if json.include?(instance)
 
-          result.failure(
-            "The instance value #{instance.value} must be equal to one of the elements in the defined enumeration: #{json.value.join(", ")}"
-          )
+          result.failure(key)
         end
       end
     end

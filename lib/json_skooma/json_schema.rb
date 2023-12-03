@@ -32,7 +32,7 @@ module JSONSkooma
       when true
         # do nothing
       when false
-        result.failure("The instance is disallowed by a boolean false schema")
+        result.failure("false")
       else
         @keywords.each do |key, keyword|
           next if keyword.static || !keyword.instance_types.include?(instance.type)

@@ -11,7 +11,7 @@ module JSONSkooma
 
         def evaluate(instance, result)
           if BigDecimal(instance.value.to_s).modulo(BigDecimal(json.value.to_s)).nonzero?
-            result.failure("The value must be a multiple of #{json.value}")
+            result.failure(key)
           end
         end
       end

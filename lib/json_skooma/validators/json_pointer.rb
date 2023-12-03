@@ -3,16 +3,16 @@
 module JSONSkooma
   module Validators
     class JSONPointer < Base
-      ESC = /~[01]/
-      UNESC = /[\u0000-\u002E\u0030-\u007d\u007F-\u{10FFFF}]/
-      TOKEN = /(#{ESC}|#{UNESC})*/
-      JSON_POINTER = /(\/#{TOKEN})*/
+      self.key = "json-pointer"
+
+      esc = /~[01]/
+      unesc = /[\u0000-\u002E\u0030-\u007d\u007F-\u{10FFFF}]/
+      token = /(#{esc}|#{unesc})*/
+      JSON_POINTER = /(\/#{token})*/
       REGEXP = /\A#{JSON_POINTER}\z/
 
-      def call(data)
-        return if REGEXP.match?(data)
-
-        raise FormatError, "#{data} is not a valid JSON pointer"
+      def call
+        failure! unless REGEXP.match?(instance)
       end
     end
   end

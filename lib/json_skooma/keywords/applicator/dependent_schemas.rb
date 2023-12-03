@@ -10,7 +10,7 @@ module JSONSkooma
 
         def evaluate(instance, result)
           annotation = []
-          err_names = []
+          error_keys = []
 
           json.each do |name, subschema|
             next unless instance.key?(name)
@@ -19,15 +19,13 @@ module JSONSkooma
               if subschema.evaluate(instance, subresult).passed?
                 annotation << name
               else
-                err_names << name
+                error_keys << name
               end
             end
           end
-          return result.annotate(annotation) if err_names.none?
+          return result.annotate(annotation) if error_keys.none?
 
-          result.failure(
-            "Properties #{err_names} are invalid against the corresponding `dependentSchemas` subschemas"
-          )
+          result.failure(key, error_keys: error_keys)
         end
       end
     end

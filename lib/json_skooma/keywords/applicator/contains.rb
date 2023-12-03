@@ -21,9 +21,7 @@ module JSONSkooma
 
           return if annotation.any?
 
-          result.failure(
-            "The array does not contain any element that is valid against the `#{key}` subschema"
-          )
+          result.failure(key)
         end
       end
     end

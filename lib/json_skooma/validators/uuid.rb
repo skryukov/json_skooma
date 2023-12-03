@@ -3,12 +3,12 @@
 module JSONSkooma
   module Validators
     class Uuid < Base
+      self.key = "uuid"
+
       REGEXP = /\A\h{8}-\h{4}-\h{4}-\h{4}-\h{12}\z/
 
-      def call(data)
-        return if REGEXP.match?(data)
-
-        raise FormatError, "#{data} is not a valid UUID"
+      def call
+        failure! unless REGEXP.match?(instance)
       end
     end
   end

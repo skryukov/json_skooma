@@ -3,52 +3,47 @@
 module JSONSkooma
   module Validators
     class Uri < Base
+      self.key = "uri"
+
       SUB_DELIMS = /[!$&'()*+,;=]/.freeze
-      GEN_DELIMS = /[:\/?#\[\]@]/.freeze
-      RESERVED = /(?:#{GEN_DELIMS}|#{SUB_DELIMS})/.freeze
       UNRESERVED = /[A-Za-z\d\-._~]/.freeze
       PCT_ENCODED = /%\h{2}/.freeze
-      PCHAR = /(?:#{UNRESERVED}|#{PCT_ENCODED}|#{SUB_DELIMS}|[:@])/.freeze
-      FRAGMENT = /(?:#{PCHAR}|[?\/])*/.freeze
-      QUERY = FRAGMENT
+      pchar = /(?:#{UNRESERVED}|#{PCT_ENCODED}|#{SUB_DELIMS}|[:@])/.freeze
+      fragment = /(?:#{pchar}|[?\/])*/.freeze
+      query = fragment
 
-      SEGMENT = /#{PCHAR}*/.freeze
-      SEGMENT_NZ = /#{PCHAR}+/.freeze
-      SEGMENT_NZ_NC = /(?:#{UNRESERVED}|#{PCT_ENCODED}|#{SUB_DELIMS}|@)+/.freeze
+      segment = /#{pchar}*/.freeze
+      segment_nz = /#{pchar}+/.freeze
+      segment_nz_nc = /(?:#{UNRESERVED}|#{PCT_ENCODED}|#{SUB_DELIMS}|@)+/.freeze
 
-      PATH_ABEMPTY = /(?:\/#{SEGMENT})*/.freeze
-      PATH_ABSOLUTE = /\/(?:#{SEGMENT_NZ}(?:\/#{SEGMENT})*)?/.freeze
-      PATH_NOSCHEME = /#{SEGMENT_NZ_NC}(?:\/#{SEGMENT})*/.freeze
-      PATH_ROOTLESS = /#{SEGMENT_NZ}(?:\/#{SEGMENT})*/.freeze
-      PATH = /(?:#{PATH_ABEMPTY}|#{PATH_ABSOLUTE}|#{PATH_NOSCHEME}|#{PATH_ROOTLESS})?/.freeze
+      path_abempty = /(?:\/#{segment})*/.freeze
+      path_absolute = /\/(?:#{segment_nz}(?:\/#{segment})*)?/.freeze
+      path_noscheme = /#{segment_nz_nc}(?:\/#{segment})*/.freeze
+      path_rootless = /#{segment_nz}(?:\/#{segment})*/.freeze
 
-      IPV_FUTURE = /v\h+\.(?:#{UNRESERVED}|#{SUB_DELIMS}|:)+/.freeze
-      IP_LITERAL = /\[(?:#{Ipv6::IPV6_ADDRESS}|#{IPV_FUTURE})\]/.freeze
+      ipv_future = /v\h+\.(?:#{UNRESERVED}|#{SUB_DELIMS}|:)+/.freeze
+      IP_LITERAL = /\[(?:#{Ipv6::IPV6_ADDRESS}|#{ipv_future})\]/.freeze
 
       PORT = /\d*/.freeze
-      REG_NAME = /(?:#{UNRESERVED}|#{PCT_ENCODED}|#{SUB_DELIMS})*/.freeze
-      HOST = /(?:#{IP_LITERAL}|#{Ipv4::IPV4_ADDRESS}|#{REG_NAME})/.freeze
-      USERINFO = /(?:#{UNRESERVED}|#{PCT_ENCODED}|#{SUB_DELIMS}|:)*/.freeze
-      AUTHORITY = /(?:#{USERINFO}@)?#{HOST}(?::#{PORT})?/.freeze
+      reg_name = /(?:#{UNRESERVED}|#{PCT_ENCODED}|#{SUB_DELIMS})*/.freeze
+      host = /(?:#{IP_LITERAL}|#{Ipv4::IPV4_ADDRESS}|#{reg_name})/.freeze
+      userinfo = /(?:#{UNRESERVED}|#{PCT_ENCODED}|#{SUB_DELIMS}|:)*/.freeze
+      authority = /(?:#{userinfo}@)?#{host}(?::#{PORT})?/.freeze
 
       SCHEME = /[a-zA-Z][a-zA-Z\d+.-]*/.freeze
 
-      HIER_PART = /(?:(?:\/\/#{AUTHORITY}#{PATH_ABEMPTY})|#{PATH_ABSOLUTE}|#{PATH_ROOTLESS})?/.freeze
+      hier_part = /(?:(?:\/\/#{authority}#{path_abempty})|#{path_absolute}|#{path_rootless})?/.freeze
 
-      URI = /#{SCHEME}:#{HIER_PART}(?:\?#{QUERY})?(?:##{FRAGMENT})?/.freeze
+      URI = /#{SCHEME}:#{hier_part}(?:\?#{query})?(?:##{fragment})?/.freeze
 
-      # ABSOLUTE_URI = /#{SCHEME}:#{HIER_PART}(?:\?#{QUERY})?/.freeze
+      relative_part = /(?:(?:\/\/#{authority}#{path_abempty})|#{path_absolute}|#{path_noscheme})?/.freeze
+      relative_ref = /#{relative_part}(?:\?#{query})?(?:##{fragment})?/.freeze
+      URI_REFERENCE = /#{URI}|#{relative_ref}/.freeze
 
-      RELATIVE_PART = /(?:(?:\/\/#{AUTHORITY}#{PATH_ABEMPTY})|#{PATH_ABSOLUTE}|#{PATH_NOSCHEME})?/.freeze
-      RELATIVE_REF = /#{RELATIVE_PART}(?:\?#{QUERY})?(?:##{FRAGMENT})?/.freeze
-      URI_REFERENCE = /#{URI}|#{RELATIVE_REF}/.freeze
+      REGEXP = /\A#{URI}\z/.freeze
 
-      REGEX = /\A#{URI}\z/.freeze
-
-      def call(data)
-        return if REGEX.match?(data.value)
-
-        raise FormatError, "#{data} is not a valid URI"
+      def call
+        failure! unless REGEXP.match?(instance)
       end
     end
   end

@@ -18,7 +18,7 @@ module JSONSkooma
 
           return if valid
 
-          result.failure("The instance must be valid against at least one subschema")
+          result.failure(key)
         end
       end
     end

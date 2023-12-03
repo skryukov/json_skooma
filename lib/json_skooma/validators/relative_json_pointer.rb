@@ -3,15 +3,15 @@
 module JSONSkooma
   module Validators
     class RelativeJSONPointer < Base
-      NN_INT = /0|[1-9][0-9]*/
-      INDEX = /[+-]#{NN_INT}/
-      RELATIVE_JSON_POINTER = /(#{NN_INT}(#{INDEX})?#{JSONPointer::JSON_POINTER})|(#{NN_INT}#)/
-      REGEXP = /\A#{RELATIVE_JSON_POINTER}\z/
+      self.key = "relative-json-pointer"
 
-      def call(data)
-        return if REGEXP.match?(data)
+      nn_int = /0|[1-9][0-9]*/
+      index = /[+-]#{nn_int}/
+      relative_json_pointer = /(#{nn_int}(#{index})?#{JSONPointer::JSON_POINTER})|(#{nn_int}#)/
+      REGEXP = /\A#{relative_json_pointer}\z/
 
-        raise FormatError, "#{data} is not a valid JSON pointer"
+      def call
+        failure! unless REGEXP.match?(instance)
       end
     end
   end

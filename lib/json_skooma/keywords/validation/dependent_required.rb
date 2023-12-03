@@ -16,7 +16,7 @@ module JSONSkooma
             missing[name] = missing_deps if missing_deps.any?
           end
 
-          result.failure("The object is missing dependent properties #{missing}") if missing.any?
+          result.failure(key, missing_keys: missing) if missing.any?
         end
       end
     end

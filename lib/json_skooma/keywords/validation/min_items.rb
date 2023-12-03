@@ -8,9 +8,7 @@ module JSONSkooma
         self.instance_types = "array"
 
         def evaluate(instance, result)
-          if instance.length < json
-            result.failure("The array has too few elements (minimum #{json.value})")
-          end
+          result.failure(key) if instance.length < json
         end
       end
     end

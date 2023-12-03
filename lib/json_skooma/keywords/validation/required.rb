@@ -10,7 +10,7 @@ module JSONSkooma
         def evaluate(instance, result)
           return if json.value.all? { |val| instance.key?(val) }
 
-          result.failure("The object is missing required properties #{json.value.join(", ")}")
+          result.failure(key)
         end
       end
     end

@@ -19,7 +19,7 @@ module JSONSkooma
 
           @validator.call(instance)
         rescue Validators::FormatError => e
-          result.failure("The instance is invalid against the #{json.value} format: #{e}")
+          result.failure(key, validation_message: e.message)
         end
       end
     end

@@ -5,10 +5,12 @@ require "regexp_parser"
 module JSONSkooma
   module Validators
     class Regex < Base
-      def call(data)
-        Regexp::Parser.parse(data)
+      self.key = "regex"
+
+      def call
+        Regexp::Parser.parse(instance)
       rescue Regexp::Scanner::ScannerError => e
-        raise FormatError, e.message
+        failure!(message: e.message)
       end
     end
   end

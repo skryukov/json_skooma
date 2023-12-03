@@ -8,9 +8,7 @@ module JSONSkooma
         self.instance_types = "object"
 
         def evaluate(instance, result)
-          if instance.length < json
-            result.failure("The object has too few properties (minimum #{json.value})")
-          end
+          result.failure(key) if instance.length < json
         end
       end
     end

@@ -15,7 +15,7 @@ module JSONSkooma
         def evaluate(instance, result)
           return if @regexp.match(instance)
 
-          result.failure("The text must match the regular expression #{json.value}")
+          result.failure(key)
         end
       end
     end

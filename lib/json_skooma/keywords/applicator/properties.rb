@@ -10,7 +10,7 @@ module JSONSkooma
 
         def evaluate(instance, result)
           annotation = []
-          err_names = []
+          error_keys = []
           instance.each do |name, item|
             next unless json.value.key?(name)
 
@@ -19,14 +19,14 @@ module JSONSkooma
               if subresult.passed?
                 annotation << name
               else
-                err_names << name
+                error_keys << name
               end
             end
           end
 
-          return result.annotate(annotation) if err_names.empty?
+          return result.annotate(annotation) if error_keys.empty?
 
-          result.failure("Properties #{err_names.join(", ")} are invalid")
+          result.failure(key, error_keys: error_keys)
         end
       end
     end

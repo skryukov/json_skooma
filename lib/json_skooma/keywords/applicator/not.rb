@@ -11,7 +11,7 @@ module JSONSkooma
           json.evaluate(instance, result)
           return result.success unless result.passed?
 
-          result.failure("The instance must not be valid against the subschema")
+          result.failure(key)
         end
       end
     end

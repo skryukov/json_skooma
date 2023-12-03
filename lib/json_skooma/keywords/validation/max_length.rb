@@ -8,9 +8,7 @@ module JSONSkooma
         self.instance_types = "string"
 
         def evaluate(instance, result)
-          if instance.length > json
-            result.failure("The text is too long (maximum #{json.value} characters))")
-          end
+          result.failure(key) if instance.length > json
         end
       end
     end

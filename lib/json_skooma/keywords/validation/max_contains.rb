@@ -13,9 +13,7 @@ module JSONSkooma
           return if contains.nil?
 
           if contains.annotation && contains.annotation.length > json
-            result.failure(
-              "The array has too many elements matching the contains subschema (maximum #{json.value})"
-            )
+            result.failure(key)
           end
         end
       end

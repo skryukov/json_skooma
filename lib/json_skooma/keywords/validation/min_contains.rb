@@ -23,7 +23,7 @@ module JSONSkooma
 
           return if valid
 
-          result.failure("The array has too few elements matching the `contains` subschema (minimum #{json.value})")
+          result.failure(key)
         end
       end
     end

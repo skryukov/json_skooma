@@ -5,6 +5,11 @@ module JSONSkooma
     class Base
       class << self
         attr_reader :instance_types
+        attr_writer :key
+
+        def key
+          @key or raise "Key must be defined"
+        end
 
         def instance_types=(value)
           @instance_types = Array(value)
@@ -15,7 +20,7 @@ module JSONSkooma
         end
 
         def call(instance)
-          new.call(instance)
+          new(instance).call
         end
 
         def inherited(subclass)
@@ -23,8 +28,24 @@ module JSONSkooma
         end
       end
 
-      def call(_instance)
+      attr_reader :instance
+
+      def initialize(instance)
+        @instance = instance
+      end
+
+      def call
         raise NotImplementedError, "must be implemented by subclass"
+      end
+
+      def failure!(**options)
+        raise FormatError, I18n.t(
+          self.class.key,
+          scope: [:validation_errors],
+          default: [],
+          instance: instance,
+          **options
+        ), []
       end
     end
   end

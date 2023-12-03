@@ -3,23 +3,23 @@
 module JSONSkooma
   module Validators
     class UriTemplate < Base
-      PCT = /%\h\h/
-      VAR_CHAR = /[A-Za-z\d_]|(#{PCT})/
-      VAR_NAME = /#{VAR_CHAR}(\.?#{VAR_CHAR})*/
-      MOD4 = /(:[1-9]\d{0,3}|(\*)?)/
-      VAR_SPEC = /#{VAR_NAME}(#{MOD4})?/
-      VAR_LIST = /#{VAR_SPEC}(,#{VAR_SPEC})*/
-      OPERATOR = /[+#.\/;?&=,!@|]/
-      EXPRESSION = /\{#{OPERATOR}?#{VAR_LIST}\}/
-      LITERALS = /[^\x00-\x20\x7F"'%<>\\^`{|}]/
-      URI_TEMPLATE = /((#{LITERALS})|(#{EXPRESSION}))*/
+      self.key = "uri-template"
 
-      REGEXP = /\A#{URI_TEMPLATE}\z/
+      pct = /%\h\h/
+      var_char = /[A-Za-z\d_]|(#{pct})/
+      var_name = /#{var_char}(\.?#{var_char})*/
+      mod4 = /(:[1-9]\d{0,3}|(\*)?)/
+      var_spec = /#{var_name}(#{mod4})?/
+      var_list = /#{var_spec}(,#{var_spec})*/
+      operator = /[+#.\/;?&=,!@|]/
+      expression = /\{#{operator}?#{var_list}\}/
+      literals = /[^\x00-\x20\x7F"'%<>\\^`{|}]/
+      uri_template = /((#{literals})|(#{expression}))*/
 
-      def call(data)
-        return if REGEXP.match?(data)
+      REGEXP = /\A#{uri_template}\z/
 
-        raise FormatError, "#{data} is not a valid URI template"
+      def call
+        failure! unless REGEXP.match?(instance)
       end
     end
   end

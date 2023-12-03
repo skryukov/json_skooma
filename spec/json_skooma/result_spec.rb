@@ -55,13 +55,13 @@ RSpec.describe JSONSkooma::Result do
               "absoluteKeywordLocation" => "https://json.skooma/test/character-sheet#/properties",
               "keywordLocation" => "/properties",
               "instanceLocation" => "",
-              "error" => "Properties race are invalid"
+              "error" => 'Invalid properties: ["race"]'
             },
             {
               "absoluteKeywordLocation" => "https://json.skooma/test/character-sheet#/properties/race/enum",
               "keywordLocation" => "/properties/race/enum",
               "instanceLocation" => "/race",
-              "error" => "The instance value Human must be equal to one of the elements in the defined enumeration: Nord, Khajiit, Argonian, Breton, Redguard, Dunmer, Altmer, Bosmer, Orc, Imperial"
+              "error" => 'The instance value "Human" must be equal to one of the elements in the defined enumeration: ["Nord", "Khajiit", "Argonian", "Breton", "Redguard", "Dunmer", "Altmer", "Bosmer", "Orc", "Imperial"]'
             }
           ]
         }
@@ -85,7 +85,7 @@ RSpec.describe JSONSkooma::Result do
               "absoluteKeywordLocation" => "https://json.skooma/test/character-sheet#/properties/race/enum",
               "keywordLocation" => "/properties/race/enum",
               "instanceLocation" => "/race",
-              "error" => "The instance value Human must be equal to one of the elements in the defined enumeration: Nord, Khajiit, Argonian, Breton, Redguard, Dunmer, Altmer, Bosmer, Orc, Imperial"
+              "error" => 'The instance value "Human" must be equal to one of the elements in the defined enumeration: ["Nord", "Khajiit", "Argonian", "Breton", "Redguard", "Dunmer", "Altmer", "Bosmer", "Orc", "Imperial"]'
             }
           ]
         }
@@ -115,7 +115,7 @@ RSpec.describe JSONSkooma::Result do
               "absoluteKeywordLocation" => "https://json.skooma/test/character-sheet#/properties",
               "keywordLocation" => "/properties",
               "instanceLocation" => "",
-              "error" => "Properties race are invalid",
+              "error" => 'Invalid properties: ["race"]',
               "errors" => [
                 {
                   "valid" => true,
@@ -142,7 +142,7 @@ RSpec.describe JSONSkooma::Result do
                       "absoluteKeywordLocation" => "https://json.skooma/test/character-sheet#/properties/race/enum",
                       "keywordLocation" => "/properties/race/enum",
                       "instanceLocation" => "/race",
-                      "error" => "The instance value Human must be equal to one of the elements in the defined enumeration: Nord, Khajiit, Argonian, Breton, Redguard, Dunmer, Altmer, Bosmer, Orc, Imperial"
+                      "error" => 'The instance value "Human" must be equal to one of the elements in the defined enumeration: ["Nord", "Khajiit", "Argonian", "Breton", "Redguard", "Dunmer", "Altmer", "Bosmer", "Orc", "Imperial"]'
                     }
                   ]
                 },

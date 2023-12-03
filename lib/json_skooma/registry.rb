@@ -29,15 +29,12 @@ module JSONSkooma
       self.class.registries[name] = self
     end
 
-    def add_format(key, validator = nil)
-      JSONSkooma::Validators.register(key, validator) if validator
-      raise RegistryError, "Format validator `#{key}` not found" unless Validators.validators.key?(key)
-
-      @enabled_formats << key
+    def add_format(*attrs)
+      @enabled_formats << JSONSkooma::Validators.register(*attrs)
     end
 
-    def format_enabled?(key)
-      @enabled_formats.include?(key)
+    def format_enabled?(validator)
+      @enabled_formats.include?(validator)
     end
 
     def add_vocabulary(uri, *keywords)

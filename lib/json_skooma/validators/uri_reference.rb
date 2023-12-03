@@ -3,12 +3,12 @@
 module JSONSkooma
   module Validators
     class UriReference < Base
-      REGEX = /\A#{Uri::URI_REFERENCE}\z/.freeze
+      self.key = "uri-reference"
 
-      def call(data)
-        return if REGEX.match?(data.value)
+      REGEXP = /\A#{Uri::URI_REFERENCE}\z/.freeze
 
-        raise FormatError, "#{data} is not a valid URI reference"
+      def call
+        failure! unless REGEXP.match?(instance)
       end
     end
   end

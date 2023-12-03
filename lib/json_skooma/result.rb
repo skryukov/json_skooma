@@ -4,10 +4,28 @@ module JSONSkooma
   class Result
     attr_writer :ref_schema
 
-    attr_reader :schema, :instance, :parent, :annotation, :error, :key
+    attr_reader :schema, :instance, :parent, :annotation, :key
 
     def initialize(schema, instance, parent: nil, key: nil)
       reset_with(instance, key, parent, schema)
+    end
+
+    def error
+      return if @error.nil?
+
+      keys = [
+        schema_node.path.to_a.join(".").to_sym,
+        instance.path.to_a.join(".").to_sym
+      ].reject!(&:empty?)
+
+      I18n.t(
+        @error,
+        scope: [:errors],
+        default: keys,
+        instance_value: instance.value,
+        schema_value: schema_node.value,
+        **@i18n_options
+      )
     end
 
     def children
@@ -53,6 +71,7 @@ module JSONSkooma
       @discard = false
       @skip_assertion = false
       @error = nil
+      @i18n_options = {}
       @path = nil
       @ref_schema = nil
       @relative_path = nil
@@ -80,14 +99,16 @@ module JSONSkooma
       @annotation = value
     end
 
-    def failure(error = nil)
+    def failure(error = nil, i18n_options = {})
       @valid = false
       @error = error
+      @i18n_options = i18n_options
     end
 
     def success
       @valid = true
       @error = nil
+      @i18n_options = {}
     end
 
     def skip_assertion

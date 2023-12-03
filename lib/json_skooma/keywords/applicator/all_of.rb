@@ -8,16 +8,16 @@ module JSONSkooma
         self.value_schema = :array_of_schemas
 
         def evaluate(instance, result)
-          err_indices = []
+          error_indexes = []
           json.each.with_index do |subschema, index|
             result.call(instance, index.to_s) do |subresult|
               subschema.evaluate(instance, subresult)
-              err_indices << index unless subresult.passed?
+              error_indexes << index unless subresult.passed?
             end
           end
-          return if err_indices.empty?
+          return if error_indexes.empty?
 
-          result.failure("The instance is invalid against subschemas #{err_indices.join(", ")}")
+          result.failure(key, error_indexes: error_indexes)
         end
       end
     end

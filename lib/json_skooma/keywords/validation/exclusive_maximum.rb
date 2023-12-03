@@ -8,9 +8,7 @@ module JSONSkooma
         self.instance_types = "number"
 
         def evaluate(instance, result)
-          if instance >= json
-            result.failure("The value must be less than #{json.value})")
-          end
+          result.failure(key) if instance >= json
         end
       end
     end

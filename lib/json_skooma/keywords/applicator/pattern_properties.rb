@@ -17,7 +17,7 @@ module JSONSkooma
 
         def evaluate(instance, result)
           matched_names = Set.new
-          err_names = []
+          error_keys = []
 
           instance.each do |name, item|
             @patterned.each do |regexp, pattern, subschema|
@@ -27,15 +27,15 @@ module JSONSkooma
                   if subresult.passed?
                     matched_names << name
                   else
-                    err_names << name
+                    error_keys << name
                   end
                 end
               end
             end
           end
 
-          if err_names.any?
-            result.failure("Properties #{err_names.join(", ")} are invalid")
+          if error_keys.any?
+            result.failure(key, error_keys: error_keys)
           else
             result.annotate(matched_names.to_a)
           end

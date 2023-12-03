@@ -10,7 +10,7 @@ module JSONSkooma
           return if json.value.include?(instance.type)
           return if integer?(instance)
 
-          result.failure("The instance must be of type #{json.value}, but was #{instance.type}")
+          result.failure(key, instance_type: instance.type)
         end
 
         private

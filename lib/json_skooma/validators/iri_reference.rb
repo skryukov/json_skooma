@@ -3,12 +3,12 @@
 module JSONSkooma
   module Validators
     class IriReference < Base
-      REGEX = /\A#{Iri::IRI_REFERENCE}\z/.freeze
+      self.key = "iri-reference"
 
-      def call(data)
-        return if REGEX.match?(data.value)
+      REGEXP = /\A#{Iri::IRI_REFERENCE}\z/.freeze
 
-        raise FormatError, "#{data} is not a valid IRI reference"
+      def call
+        failure! unless REGEXP.match?(instance)
       end
     end
   end

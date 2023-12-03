@@ -11,7 +11,7 @@ module JSONSkooma
           return unless json.value
 
           if instance.uniq.size != instance.size
-            result.failure("The array's elements must all be unique")
+            result.failure(key)
           end
         end
       end

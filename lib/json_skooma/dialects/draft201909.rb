@@ -103,32 +103,32 @@ module JSONSkooma
           )
 
           if assert_formats
-            registry.add_format("date-time", Validators::DateTime)
-            registry.add_format("date", Validators::Date)
-            registry.add_format("time", Validators::Time)
-            registry.add_format("duration", Validators::Duration)
+            registry.add_format(Validators::DateTime)
+            registry.add_format(Validators::Date)
+            registry.add_format(Validators::Time)
+            registry.add_format(Validators::Duration)
 
-            registry.add_format("email", Validators::Email)
-            registry.add_format("idn-email", Validators::IdnEmail)
+            registry.add_format(Validators::Email)
+            registry.add_format(Validators::IdnEmail)
 
-            registry.add_format("hostname", Validators::Hostname)
-            registry.add_format("idn-hostname", Validators::IdnHostname)
+            registry.add_format(Validators::Hostname)
+            registry.add_format(Validators::IdnHostname)
 
-            registry.add_format("ipv4", Validators::Ipv4)
-            registry.add_format("ipv6", Validators::Ipv6)
+            registry.add_format(Validators::Ipv4)
+            registry.add_format(Validators::Ipv6)
 
-            registry.add_format("uri", Validators::Uri)
-            registry.add_format("uri-reference", Validators::UriReference)
-            registry.add_format("iri", Validators::Iri)
-            registry.add_format("iri-reference", Validators::IriReference)
-            registry.add_format("uuid", Validators::Uuid)
+            registry.add_format(Validators::Uri)
+            registry.add_format(Validators::UriReference)
+            registry.add_format(Validators::Iri)
+            registry.add_format(Validators::IriReference)
+            registry.add_format(Validators::Uuid)
 
-            registry.add_format("uri-template", Validators::UriTemplate)
+            registry.add_format(Validators::UriTemplate)
 
-            registry.add_format("json-pointer", Validators::JSONPointer)
-            registry.add_format("relative-json-pointer", Validators::RelativeJSONPointer)
+            registry.add_format(Validators::JSONPointer)
+            registry.add_format(Validators::RelativeJSONPointer)
 
-            registry.add_format("regex", Validators::Regex)
+            registry.add_format(Validators::Regex)
           end
         end
       end

@@ -3,10 +3,12 @@
 module JSONSkooma
   module Validators
     class Time < Base
+      self.key = "time"
+
       REGEXP = /\A#{DateTime::FULL_TIME}\z/
 
-      def call(data)
-        match = REGEXP.match(data)
+      def call
+        match = REGEXP.match(instance)
 
         if match.nil? || !valid_leap_seconds?(match)
           raise FormatError, "must be a valid RFC 3339 time string"
