@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix `$dynamicAnchor` boolean evaluation. ([@skryukov])
+
 ## [0.2.1] - 2023-12-03
 
 ### Fixed
