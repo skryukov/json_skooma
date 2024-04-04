@@ -25,7 +25,7 @@ module JSONSkooma
       if path.is_a?(Array)
         @path = path
       else
-        super CGI.unescape(path)
+        super(CGI.unescape(path))
       end
     end
 

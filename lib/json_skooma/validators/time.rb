@@ -22,7 +22,7 @@ module JSONSkooma
         if match[:on]
           sign = (match[:on] == "+") ? -1 : 1
           time += sign * (match[:oh].to_i * 60 + match[:om].to_i)
-          time = time % (60 * 24)
+          time %= (60 * 24)
         end
         leap_time = 23 * 60 + 59
         time == leap_time
