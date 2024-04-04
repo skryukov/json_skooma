@@ -27,7 +27,7 @@ module JSONSkooma
             metaschema_uri: parent_schema.metaschema_uri,
             cache_id: parent_schema.cache_id
           )
-          dynamic_anchor = @ref_schema["$dynamicAnchor"]
+          dynamic_anchor = @ref_schema["$dynamicAnchor"] if @ref_schema.type == "object"
           @dynamic = dynamic_anchor == @fragment
         end
 
