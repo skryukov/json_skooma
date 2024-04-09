@@ -3,7 +3,7 @@ en:
     errors:
       allOf: "The instance is invalid against subschemas %{error_indexes}"
       anyOf: "The instance must be valid against at least one subschema"
-      const: "The instance value %<instance_value>p must be equal to the defined constant %<schema_value>s"
+      const: "The instance value %<instance_value>p must be equal to the defined constant %<schema_value>p"
       contains: "The array does not contain any element that is valid against the `contains` subschema"
       dependentRequired: "The object is missing dependent properties %{missing_keys}"
       dependentSchemas: "Properties %{error_keys} are invalid against the corresponding `dependentSchemas` subschemas"

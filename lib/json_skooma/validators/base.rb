@@ -42,6 +42,7 @@ module JSONSkooma
         raise FormatError, I18n.t(
           self.class.key,
           scope: [:validation_errors],
+          # TODO: add i18n cascade options
           default: [],
           instance: instance,
           **options

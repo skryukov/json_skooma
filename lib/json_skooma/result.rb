@@ -13,13 +13,18 @@ module JSONSkooma
     def error
       return if @error.nil?
 
+      instance_path = instance.path.to_a.join('.')
       keys = [
-        schema_node.path.to_a.join(".").to_sym,
-        instance.path.to_a.join(".").to_sym
-      ].reject!(&:empty?)
+        :"instance_location#{".#{instance_path}" unless instance_path.empty?}.#{@key}",
+        @error.is_a?(Array) ? @key.to_sym : @error.to_sym
+      ]
+      relative_keyword_location = relative_path.to_a.join(".")
+      keys.unshift(:"relative_keyword_location.#{relative_keyword_location}") unless relative_keyword_location.empty?
+      keyword_location = schema_node.path.to_a.join(".")
+      keys.unshift(:"keyword_location.#{keyword_location}") unless keyword_location.empty?
 
       I18n.t(
-        @error,
+        keys.shift,
         scope: [:errors],
         default: keys,
         instance_value: instance.value,
@@ -143,9 +148,9 @@ module JSONSkooma
       return if !valid? || discard?
 
       if @annotation &&
-          (key.nil? || key == @key) &&
-          (keys.nil? || keys.include?(@key)) &&
-          (instance.path == @instance.path)
+        (key.nil? || key == @key) &&
+        (keys.nil? || keys.include?(@key)) &&
+        (instance.path == @instance.path)
         yield self
       end
 
@@ -160,9 +165,9 @@ module JSONSkooma
       return if valid? || discard?
 
       if @error &&
-          (key.nil? || key == @key) &&
-          (keys.nil? || keys.include?(@key)) &&
-          (instance.path == @instance.path)
+        (key.nil? || key == @key) &&
+        (keys.nil? || keys.include?(@key)) &&
+        (instance.path == @instance.path)
         yield self
       end
 

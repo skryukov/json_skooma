@@ -9,7 +9,8 @@ module JSONSkooma
 
     class << self
       def translate(key, *args, **options)
-        options[:default] = (options[:default] || []) << DEFAULT_VALUES[key.to_s]
+        lookup_key = (options[:default].last || key).to_s
+        options[:default] = (options[:default] || []) << DEFAULT_VALUES[lookup_key]
         options[:scope] = options[:scope] ? Array(options[:scope]).unshift(DEFAULT_SCOPE) : DEFAULT_SCOPE
         ::I18n.translate(key, *args, **options)
       end

@@ -10,7 +10,6 @@ module JSONSkooma
         def initialize(parent_schema, value)
           super
 
-          # todo: validate URI.validate(require_scheme=True, require_normalized=True)
           uri = URI.parse(value)
           parent_schema.metaschema_uri = uri
 
