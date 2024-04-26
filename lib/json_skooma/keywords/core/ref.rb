@@ -20,7 +20,6 @@ module JSONSkooma
           parent_schema.registry.add_source(
             pathname.dirname.to_s + "/",
             JSONSkooma::Sources::Remote.new(json)
-            # JSONSkooma::Sources::Remote.new(pathname.basename)
           )
         end
 
