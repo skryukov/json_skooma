@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Fixed
+
+- Fix `JSONSkooma::Sources::Remote` to allow remote refs. ([@killondark])
+
 ## [0.2.2] - 2023-04-09
 
 ### Fixed
@@ -42,6 +46,7 @@ and this project adheres to [Semantic Versioning].
 - Initial implementation. ([@skryukov])
 
 [@skryukov]: https://github.com/skryukov
+[@killondark]: https://github.com/killondark
 
 [Unreleased]: https://github.com/skryukov/json_skooma/compare/v0.2.2...HEAD
 [0.2.2]: https://github.com/skryukov/json_skooma/compare/v0.2.1...v0.2.2

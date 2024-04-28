@@ -46,7 +46,7 @@ module JSONSkooma
       def read(relative_path)
         path = suffix ? relative_path + suffix : relative_path
         url = URI.join(base, path)
-        url.open.read
+        url.read
       rescue OpenURI::HTTPError, SocketError
         raise Error, "Could not fetch #{url}"
       end

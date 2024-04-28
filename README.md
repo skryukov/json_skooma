@@ -14,7 +14,7 @@ JSONSkooma is a Ruby library for validating JSONs against JSON Schemas.
 - Supports custom schema resolvers
 
 <a href="https://evilmartians.com/?utm_source=json_skooma&utm_campaign=project_page">
-<img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg" alt="Sponsored by Evil Martians" width="236" height="54">
+<img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg" alt="Built by Evil Martians" width="236" height="54">
 </a>
 
 ## Installation
@@ -115,6 +115,45 @@ result.output(:basic)
 #     "keywordLocation"=>"/properties/foo/enum",
 #     "absoluteKeywordLocation"=>"urn:uuid:cb8fb0a0-ce16-416f-b5ba-2a6531992be9#/$defs/Foo/properties/foo/enum",
 #     "error"=>"The instance value \"bar\" must be equal to one of the elements in the defined enumeration: [\"baz\"]"}]}
+```
+
+### Handling External `$ref`s in JSON Schemas
+
+In `JSONSkooma`, you can map `$ref` identifiers in your JSON schemas to local or remote sources.
+
+This configuration allows `JSONSkooma` to automatically link `$ref` URIs to their corresponding schemas from specified sources:
+
+```yaml
+# schema.yml
+$schema: https://json-schema.org/draft/2020-12/schema
+type: object
+properties:
+  user:
+    $ref: http://local.example/user_definition.yaml
+  product:
+    $ref: http://remote.example/product_definition.yaml
+```
+
+```ruby
+# Initialize the JSONSkooma registry
+schema_registry = JSONSkooma.create_registry("2020-12")
+
+# Add a local source for user definitions
+local_schemas_path = File.join(__dir__, "schemas", "local")
+schema_registry.add_source(
+  "http://local.example/",
+  JSONSkooma::Sources::Local.new(local_schemas_path)
+)
+
+# Add a remote source for product definitions
+schema_registry.add_source(
+  "http://remote.example/",
+  JSONSkooma::Sources::Remote.new("http://example.com/schemas/")
+)
+
+# JSONSkooma now automatically resolves `$refs` to the appropriate schemas:
+# - http://local.example/user_definition.yaml -> ./schemas/local/user_definition.yaml
+# - http://remote.example/product_definition.yaml -> http://example.com/schemas/product_definition.yaml
 ```
 
 ## Alternatives
