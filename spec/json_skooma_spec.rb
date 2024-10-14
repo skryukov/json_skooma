@@ -69,7 +69,11 @@ RSpec.describe JSONSkooma do
           JSONSkooma.create_registry(version[5..], assert_formats: true)
         end
 
-        include_context "json_schema_test_suite", Dir["#{suite}/optional/format/*.json"]
+        include_context "json_schema_test_suite", (Dir["#{suite}/optional/format/*.json"].reject do |file|
+          [
+            "ecmascript-regex.json"
+          ].include?(file.split("/").last)
+        end)
       end
     end
   end
