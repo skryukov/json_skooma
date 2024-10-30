@@ -37,6 +37,29 @@ RSpec.describe JSONSkooma::JSONSchema do
 
     it { is_expected.to be_valid }
 
+    context "with required keys" do
+      before do
+        schema_data["required"] = %w[foo bar]
+        schema_data["properties"]["bar"] = {"type" => "integer"}
+      end
+
+      it { is_expected.not_to be_valid }
+
+      it "informs us which key is missing" do
+        errors = subject.output(:detailed)["errors"].map { |e| e["error"] }
+
+        expect(errors).to contain_exactly(
+          "The object requires the following keys: foo, bar. Missing keys: bar"
+        )
+      end
+
+      context "with valid instance" do
+        let(:instance) { {foo: "baz", bar: 123} }
+
+        it { is_expected.to be_valid }
+      end
+    end
+
     context "with ref option" do
       let(:ref) { "#/$defs/FooBaz" }
 

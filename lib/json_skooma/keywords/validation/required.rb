@@ -8,9 +8,20 @@ module JSONSkooma
         self.instance_types = "object"
 
         def evaluate(instance, result)
-          return if json.value.all? { |val| instance.key?(val) }
+          missing = required_keys.reject { |key| instance.key?(key) }
+          return if missing.none?
 
-          result.failure("The object is missing required properties #{json.value.join(", ")}")
+          result.failure(missing_keys_message(missing))
+        end
+
+        private
+
+        def required_keys
+          json.value
+        end
+
+        def missing_keys_message(missing)
+          "The object requires the following keys: #{required_keys.join(", ")}. Missing keys: #{missing.join(", ")}"
         end
       end
     end
