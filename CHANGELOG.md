@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.2.4] - 2024-10-31
+
+### Added
+
+- Improve error messages for missing required keys ([@alexkalderimis])
+
 ## [0.2.3] - 2024-04-28
 
 ### Fixed
@@ -47,10 +53,12 @@ and this project adheres to [Semantic Versioning].
 
 - Initial implementation. ([@skryukov])
 
-[@skryukov]: https://github.com/skryukov
+[@alexkalderimis]: https://github.com/alexkalderimis
 [@killondark]: https://github.com/killondark
+[@skryukov]: https://github.com/skryukov
 
-[Unreleased]: https://github.com/skryukov/json_skooma/compare/v0.2.3...HEAD
+[Unreleased]: https://github.com/skryukov/json_skooma/compare/v0.2.4...HEAD
+[0.2.4]: https://github.com/skryukov/json_skooma/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/skryukov/json_skooma/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/skryukov/json_skooma/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/skryukov/json_skooma/compare/v0.2.0...v0.2.1
