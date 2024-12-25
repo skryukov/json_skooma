@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+## [0.2.5] - 2024-12-25
+
+### Added
+
+- Support Ruby 3.4. ([@skryukov])
+
 ## [0.2.4] - 2024-10-31
 
 ### Added
@@ -57,7 +63,8 @@ and this project adheres to [Semantic Versioning].
 [@killondark]: https://github.com/killondark
 [@skryukov]: https://github.com/skryukov
 
-[Unreleased]: https://github.com/skryukov/json_skooma/compare/v0.2.4...HEAD
+[Unreleased]: https://github.com/skryukov/json_skooma/compare/v0.2.5...HEAD
+[0.2.5]: https://github.com/skryukov/json_skooma/compare/v0.2.4...v0.2.5
 [0.2.4]: https://github.com/skryukov/json_skooma/compare/v0.2.3...v0.2.4
 [0.2.3]: https://github.com/skryukov/json_skooma/compare/v0.2.2...v0.2.3
 [0.2.2]: https://github.com/skryukov/json_skooma/compare/v0.2.1...v0.2.2
