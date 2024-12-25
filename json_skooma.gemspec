@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
   spec.files = Dir.glob("lib/**/*") + Dir.glob("data/**/{*.json,README.md}") + %w[README.md LICENSE.txt CHANGELOG.md]
   spec.require_paths = ["lib"]
 
+  spec.add_runtime_dependency "bigdecimal"
   spec.add_runtime_dependency "zeitwerk", "~> 2.6"
   spec.add_runtime_dependency "hana", "~> 1.3"
   spec.add_runtime_dependency "regexp_parser", "~> 2.0"
