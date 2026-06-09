@@ -4,12 +4,22 @@ module JSONSkooma
   module Keywords
     module ValueSchemas
       class << self
+        attr_writer :default_schema_class
+
         def [](key)
           value_schemas&.[](key) or raise "Unknown value schema: #{key}, known schemas: #{value_schemas.keys.inspect}"
         end
 
         def register_value_schema(key, klass)
           (self.value_schemas ||= {})[key] = klass
+        end
+
+        # Class used to wrap schema values when a keyword does not set its own
+        # `schema_value_class`. Extensions (e.g. Skooma) override this to plug
+        # their own JSONSchema subclass into every sub-schema created by the
+        # built-in applicator keywords.
+        def default_schema_class
+          @default_schema_class || JSONSchema
         end
 
         private
@@ -21,7 +31,7 @@ module JSONSkooma
         def wrap_value(value)
           return super unless value.is_a?(Hash) || value.is_a?(TrueClass) || value.is_a?(FalseClass)
 
-          (self.class.schema_value_class || JSONSchema).new(
+          (self.class.schema_value_class || ValueSchemas.default_schema_class).new(
             value,
             parent: parent_schema,
             key: key,
@@ -46,7 +56,7 @@ module JSONSkooma
             value,
             parent: parent_schema,
             key: key,
-            item_class: self.class.schema_value_class || JSONSchema,
+            item_class: self.class.schema_value_class || ValueSchemas.default_schema_class,
             registry: parent_schema.registry,
             cache_id: parent_schema.cache_id
           )
@@ -69,7 +79,7 @@ module JSONSkooma
             value,
             parent: parent_schema,
             key: key,
-            item_class: self.class.schema_value_class || JSONSchema,
+            item_class: self.class.schema_value_class || ValueSchemas.default_schema_class,
             registry: parent_schema.registry,
             cache_id: parent_schema.cache_id
           )

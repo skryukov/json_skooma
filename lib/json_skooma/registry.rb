@@ -3,6 +3,19 @@
 module JSONSkooma
   class RegistryError < Error; end
 
+  # Raised when a ref resolves to an object that is not the class the caller expected.
+  # Extension points (e.g. typed OpenAPI refs) can rescue this and load the subtree
+  # as the right class without matching on error message text.
+  class UnexpectedSchemaClassError < RegistryError
+    attr_reader :uri, :expected_class
+
+    def initialize(uri, expected_class)
+      @uri = uri
+      @expected_class = expected_class
+      super("The object referenced by #{uri} is not #{expected_class}")
+    end
+  end
+
   class Registry
     class << self
       attr_accessor :registries
@@ -79,7 +92,7 @@ module JSONSkooma
       schema = JSONPointer.new(uri.fragment).eval(schema) if uri.fragment
       return schema if schema.is_a?(expected_class)
 
-      raise RegistryError, "The object referenced by #{uri} is not #{expected_class}"
+      raise UnexpectedSchemaClassError.new(uri, expected_class)
     end
 
     def add_metaschema(uri, default_core_vocabulary_uri = nil, *default_vocabulary_uris)
@@ -112,8 +125,6 @@ module JSONSkooma
 
       @uri_sources[uri] = source
     end
-
-    private
 
     def load_json(uri)
       candidates = @uri_sources
