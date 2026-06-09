@@ -156,6 +156,44 @@ schema_registry.add_source(
 # - http://remote.example/product_definition.yaml -> http://example.com/schemas/product_definition.yaml
 ```
 
+### Extracting annotations
+
+The `:annotated` output format re-shapes collected annotations into a hash that mirrors your data: every node becomes a hash of its annotations plus a `"value"` key holding the original value. Useful for rendering data alongside the `title`/`description` texts defined in the schema.
+
+```ruby
+schema = JSONSkooma::JSONSchema.new({
+  "$schema" => "https://json-schema.org/draft/2020-12/schema",
+  "type" => "object",
+  "properties" => {
+    "user_id" => {
+      "type" => "integer",
+      "title" => "User Identifier",
+      "description" => "A unique numeric ID for the user."
+    }
+  }
+})
+
+result = schema.evaluate({"user_id" => 123})
+
+result.output(:annotated)
+# {"user_id"=>
+#   {"title"=>"User Identifier",
+#    "description"=>"A unique numeric ID for the user.",
+#    "value"=>123}}
+
+# Pick which annotation keywords to include (default: title and description):
+result.output(:annotated, keywords: %w[title description default deprecated])
+
+# Rename the wrapper key:
+result.output(:annotated, value_key: "data")
+```
+
+Notes:
+
+- Annotations contributed through `$ref`/`allOf` are merged into the same location; if several subschemas annotate the same keyword at the same location, the last one wins.
+- Annotations from failed subschemas (e.g. a non-matching `anyOf` branch) are dropped, as the spec prescribes.
+- The root node is returned unwrapped to keep the output data-shaped, so annotations on the root schema itself are not included.
+
 ## Alternatives
 
 - [json_schemer](https://github.com/davishmcclurg/json_schemer) – Draft 4, 6, 7, 2019-09 and 2020-12 compliant

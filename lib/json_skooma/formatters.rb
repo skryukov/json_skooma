@@ -133,5 +133,61 @@ module JSONSkooma
       end
     end
     register :verbose, Verbose
+
+    # Re-shapes collected annotations into a hash that mirrors the instance
+    # data: every node (except the root) becomes a hash of its annotations
+    # plus a "value" key holding the original value (with nested nodes wrapped
+    # the same way). Annotations contributed through $ref/allOf land on the
+    # same instance location, so they merge naturally; annotations from failed
+    # subschemas are dropped, per the JSON Schema spec.
+    #
+    #   result.output(:annotated)
+    #   # => {"user_id" => {"title" => "User Identifier", "value" => 123}, ...}
+    #
+    # Options:
+    #   keywords: list of annotation keywords to include (default: title, description)
+    #   value_key: key under which the original value is placed (default: "value")
+    module Annotated
+      DEFAULT_KEYWORDS = %w[title description].freeze
+
+      class << self
+        def call(result, keywords: DEFAULT_KEYWORDS, value_key: "value", **_options)
+          annotations = {}
+          collect(result, keywords.map(&:to_s), annotations)
+          represent(result.instance, annotations, value_key, root: true)
+        end
+
+        private
+
+        def collect(node, keywords, annotations)
+          return unless node.valid?
+
+          if node.annotation && keywords.include?(node.key)
+            annotation = node.annotation
+            annotation = annotation.value if annotation.is_a?(JSONNode)
+            (annotations[node.instance.path.to_s] ||= {})[node.key] = annotation
+          end
+
+          node.each_children { |child| collect(child, keywords, annotations) }
+        end
+
+        def represent(instance, annotations, value_key, root: false)
+          value =
+            case instance.type
+            when "object"
+              instance.transform_values { |child| represent(child, annotations, value_key) }
+            when "array"
+              instance.map { |child| represent(child, annotations, value_key) }
+            else
+              instance.value
+            end
+
+          return value if root
+
+          (annotations[instance.path.to_s] || {}).merge(value_key => value)
+        end
+      end
+    end
+    register :annotated, Annotated
   end
 end
