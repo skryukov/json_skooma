@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
+### Added
+
+- New `:annotated` output format interleaves the instance data with annotations collected during evaluation (`title`/`description` by default, configurable via `keywords:`). Each node becomes `{"title" => ..., "value" => ...}`, mirroring the shape of the data — handy for rendering values alongside their schema-defined labels. ([@skryukov], [#13](https://github.com/skryukov/json_skooma/issues/13))
+- `JSONSkooma::UnexpectedSchemaClassError < RegistryError` is now raised by `Registry#schema` when the resolved fragment does not match the expected class. Extensions can rescue this specific error instead of matching on message text. ([@skryukov])
+- `Registry#load_json(uri)` is now public so extensions can load a raw document via registered sources. ([@skryukov])
+- `Keywords::ValueSchemas.default_schema_class=` lets extensions set the fallback class used to wrap sub-schemas when a keyword does not specify its own `schema_value_class`. ([@skryukov])
+
 ## [0.2.5] - 2024-12-25
 
 ### Added
