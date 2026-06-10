@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     name: RuboCop Linter
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
@@ -32,6 +32,7 @@ jobs:
       fail-fast: false
       matrix:
         ruby:
+          - "4.0"
           - "3.4"
           - "3.3"
           - "3.2"
@@ -41,7 +42,7 @@ jobs:
           - "jruby"
           - "truffleruby"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
       - name: Set up Ruby
