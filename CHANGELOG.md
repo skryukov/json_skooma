@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning].
 
 ## [Unreleased]
 
-## [0.2.6] - 2026-06-10
+## [0.2.7] - 2026-06-10
+
+### Fixed
+
+- Include the JSON Schema metaschema data files in the packaged gem. 0.2.6 was built without the `data/draft-*` submodules checked out, so `create_registry` crashed with `Sources::Error` on the released gem. ([@skryukov])
+
+## [0.2.6] - 2026-06-10 [YANKED]
 
 ### Added
 
@@ -72,7 +78,8 @@ and this project adheres to [Semantic Versioning].
 [@killondark]: https://github.com/killondark
 [@skryukov]: https://github.com/skryukov
 
-[Unreleased]: https://github.com/skryukov/json_skooma/compare/v0.2.6...HEAD
+[Unreleased]: https://github.com/skryukov/json_skooma/compare/v0.2.7...HEAD
+[0.2.7]: https://github.com/skryukov/json_skooma/compare/v0.2.6...v0.2.7
 [0.2.6]: https://github.com/skryukov/json_skooma/compare/v0.2.5...v0.2.6
 [0.2.5]: https://github.com/skryukov/json_skooma/compare/v0.2.4...v0.2.5
 [0.2.4]: https://github.com/skryukov/json_skooma/compare/v0.2.3...v0.2.4

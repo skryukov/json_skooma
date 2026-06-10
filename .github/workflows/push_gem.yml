@@ -28,6 +28,10 @@ jobs:
           egress-policy: audit
 
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v5.0.1
+        with:
+          # data/draft-* are submodules; without them the packaged gem
+          # ships empty data/ and create_registry crashes (0.2.6 regression)
+          submodules: true
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@e65c17d16e57e481586a6a5a0282698790062f92 # v1.300.0
